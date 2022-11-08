@@ -1,0 +1,104 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(CodeClanData)
+drinks_content
+```
+
+1. 
+```{r}
+glimpse(drinks_content)
+# Variable types and names are listed here. Rows and columns also
+# which tells us the dimensions (242, 18)
+dim(drinks_content)
+# Lists the dimensions as rows first and then columns. Not need as
+# glimpse told us this already.
+```
+
+2. 
+```{r}
+drinks_content %>% 
+  select(Beverage_category, Beverage, Beverage_prep, Calories) %>% 
+  filter(!is.na(Calories))
+```
+
+3.
+```{r}
+drinks_content %>% 
+  select(Beverage_category, Beverage, Beverage_prep, Calories) %>% 
+  filter(!is.na(Calories)) %>% 
+  mutate(calorie_diff = Calories - 135)
+```
+
+
+
+4.
+```{r}
+drinks_content %>% 
+  select(Beverage_category, Beverage, Beverage_prep, Calories) %>% 
+  filter(!is.na(Calories)) %>% 
+  group_by(Beverage_category) %>% 
+  summarise(mean_calories = mean(Calories)) %>% 
+  arrange(desc(mean_calories))
+```
+Smoothies, Frappuccino Blended Coffee and Signature Espresso Drinks have the 
+most calories
+
+Classic Espresso Drinks, Shaken Iced Beverages and Coffee have the least
+
+
+
+
+5. 
+```{r}
+drinks_content %>% 
+  select(Beverage_category, Beverage, Beverage_prep, Calories) %>% 
+  filter(!is.na(Calories)) %>% 
+  group_by(Beverage_prep) %>% 
+  summarise(mean_calories = mean(Calories)) %>% 
+  arrange(desc(mean_calories))
+```
+
+
+
+6. 
+```{r}
+drinks_content %>% 
+  select(Beverage_category, Beverage, Beverage_prep, Calories) %>% 
+  filter(!is.na(Calories)) %>% 
+  summarise(mean_all_calories = mean(Calories)) %>% 
+  pull()
+
+drinks_content %>% 
+  select(Beverage_category, Beverage, Beverage_prep, Calories) %>% 
+  filter(!is.na(Calories)) %>% 
+  group_by(Beverage_prep) %>% 
+  summarise(mean_calories = mean(Calories)) %>% 
+  arrange(desc(mean_calories)) %>% 
+  filter(mean_calories > 193.8719)
+
+  
+```
+
+
+
+
+
+```{r}
+drinks_content %>% 
+  select(Beverage_category, Beverage, Beverage_prep, Calories) %>% 
+  filter(!is.na(Calories)) %>% 
+  group_by(Beverage) %>% 
+  summarise(mean_calories = mean(Calories)) %>% 
+  arrange(desc(mean_calories))
+```
+
+The best drink for low calories is...
+
+Beverage_prep: Tall 
+Beverage_category: coffee 
+Beverage: brewed coffee
