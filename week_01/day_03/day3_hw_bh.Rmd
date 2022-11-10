@@ -1,0 +1,146 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+movies <- read_csv("movies.csv")
+```
+
+1.
+```{r}
+view(movies)
+
+glimpse(movies)
+```
+
+To start with, I'd use view() and glimpse() functions to get an overview of the data.
+
+I'd check to see if there are any differences between original_movie and movie, as most of them seem the same.
+
+Homepages seem to have a lot of NAs, I can't  see  this being a big issue though; it doesn't seem like important information anyway (could be wrong though!)
+
+I might want to sort by release date and use arrange() on it, it's out of order.
+
+I'd check for NA values in different variables.
+
+2. 
+```{r}
+movies_selected <- movies %>%
+  select(runtime, title, budget)
+  
+```
+
+3. 
+
+```{r}
+
+
+runtime_count <- movies_selected %>% #Assign a variable runtime_count
+  filter(is.na(runtime)) %>%  #Filters out the na variables and returns them
+  summarise(count = sum(is.na(runtime))) # creates a new data frame of the sum of all na values
+
+budget_count <- movies_selected %>% # same but for budget column
+  filter(is.na(budget)) %>% 
+  summarise(count = sum(is.na(budget)))
+
+title_count <- movies_selected %>% #same butfor title count  column
+  filter(is.na(title)) %>% 
+  summarise(count = sum(is.na(title)))
+
+runtime_count + budget_count + title_count #Add all 3 counts together, to get the total number of na values
+
+  
+```
+
+4. 
+```{r}
+movies_na_count_updated <- movies_selected %>%  # Assigning a new variable, for the updated count which we'll return at the end
+  mutate(runtime = na_if(runtime, 0)) %>%  # Mutates the column runtime, so that it will register as NA if a 0 is found in any of the rows
+  summarise(count = sum(is.na(runtime))) # Creates a new dataframe of the sum of all NA values, this time including Os as NAs
+  
+
+movies_na_count_updated
+```
+
+
+5. 
+```{r}
+
+median_runtime <- movies_imputed %>% 
+  median(runtime, na.rm = T)
+
+
+movies_imputed <- movies_selected %>%
+  mutate(runtime = na_if(runtime, 0)) %>% 
+  mutate(runtime = coalesce(runtime, median(runtime, na.rm = T)))
+
+
+movies_imputed %>% 
+  summarise(count = sum(is.na(runtime)))
+
+
+```
+6.
+
+```{r}
+movies_imputed %>% 
+  arrange(desc(runtime)) %>% 
+  head(10)
+  
+movies_imputed %>% 
+  arrange(runtime) %>% 
+  head(10)
+
+```
+
+7. 
+
+```{r}
+movies_imputed <- movies_imputed %>% 
+  mutate(budget = if_else(budget < 100, median(budget), budget))
+
+
+median(movies_imputed$budget)
+
+movies_imputed %>% 
+  filter(budget == median(budget))
+```
+
+Extension:
+
+1.
+
+```{r}
+movie_budgets <- movies_imputed %>% 
+  mutate(budget_type = case_when(
+    budget < 12e6 ~ "Small budget",
+    budget > 12e6 & budget < 40e6 ~ "Medium budget",
+    budget > 40e6 ~ "Big budget"
+  ))
+
+
+```
+
+2. 
+```{r}
+
+character_columns <- movies %>% 
+  select(where(class(character)))
+
+
+
+
+movies %>% 
+  summarise(
+    across(.cols = where(is.character(),
+           .fns = NULL,
+           na.rm = T)))
+  )
+
+
+```
+
+
+

@@ -67,7 +67,7 @@ drinks_content %>%
 
 6. 
 ```{r}
-drinks_content %>% 
+mean_calories <- drinks_content %>% 
   select(Beverage_category, Beverage, Beverage_prep, Calories) %>% 
   filter(!is.na(Calories)) %>% 
   summarise(mean_all_calories = mean(Calories)) %>% 
