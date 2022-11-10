@@ -30,6 +30,7 @@ I'd check for NA values in different variables.
 movies_selected <- movies %>%
   select(runtime, title, budget)
   
+
 ```
 
 3. 
@@ -46,11 +47,17 @@ budget_count <- movies_selected %>% # same but for budget column
   summarise(count = sum(is.na(budget)))
 
 title_count <- movies_selected %>% #same butfor title count  column
-  filter(is.na(title)) %>% 
+  filter(is.na(title)) %>%
   summarise(count = sum(is.na(title)))
 
 runtime_count + budget_count + title_count #Add all 3 counts together, to get the total number of na values
 
+summary(movies_selected) # this will tell us NAs, little hack
+
+
+
+movies_selected %>% 
+  summarise(across(everything(), ~sum(is.na(.x))))
   
 ```
 
@@ -67,9 +74,6 @@ movies_na_count_updated
 
 5. 
 ```{r}
-
-median_runtime <- movies_imputed %>% 
-  median(runtime, na.rm = T)
 
 
 movies_imputed <- movies_selected %>%
@@ -92,6 +96,17 @@ movies_imputed %>%
 movies_imputed %>% 
   arrange(runtime) %>% 
   head(10)
+
+
+longest_10 <- movies_imputed %>% 
+  slice_max(runtime, n = 10)
+
+shortest_10 <- movies_imputed %>% 
+  slice_min(runtime, n = 10)
+
+shortest_10
+
+sum(1, 6, 2 ,3 ,4 ,5 ,7, NA, na.rm =  T)
 
 ```
 
@@ -117,7 +132,7 @@ movie_budgets <- movies_imputed %>%
   mutate(budget_type = case_when(
     budget < 12e6 ~ "Small budget",
     budget > 12e6 & budget < 40e6 ~ "Medium budget",
-    budget > 40e6 ~ "Big budget"
+    budget >= 40e6 ~ "Big budget"
   ))
 
 
@@ -139,6 +154,13 @@ movies %>%
            na.rm = T)))
   )
 
+# This is Sarah's code
+movies %>% 
+    select(where(is.character)) %>% 
+    summarise(
+    across(.cols = where(is.character),
+                .fns = ~sum(is.na(.x)))
+                )
 
 ```
 
