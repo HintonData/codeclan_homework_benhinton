@@ -1,0 +1,133 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+books <- read_csv("data/books.csv")
+```
+
+```{r}
+view(books)
+
+glimpse(books)
+```
+possible areas to explore:
+
+1. The publisher, what  if we grouped by Publisher and some other categories, we could do some comparisons.
+
+2. What about authors, how about we find how many books each author has published? See who has the most and the least
+
+3. What about languages, see which languages are the most common.
+
+4. Who is the most popular author? (by average_rating)
+
+
+
+1. Which publisher has published the most books?
+
+Note: I was trying to answer question 3 and struggling - I inadvertently answered this one instead!
+
+```{r}
+books1  <-  books %>% 
+  select(publisher) %>% 
+  group_by(publisher) %>% 
+  summarise(count_of_books_published = n()) %>% 
+  arrange(desc(count_of_books_published))
+
+head(books1)
+
+# Answer - vintage!
+
+```
+
+
+2. What are the top 5 rated books?
+```{r}
+books2 <- books %>% 
+  arrange(desc(average_rating)) %>% 
+  select(average_rating, title)
+
+head(books2, 5)
+
+view(books2)
+
+```
+
+This does seem to be right; however, there are actually 22 books tied for first place! These 5 are randomly selected, not inherently higher rated than any of the other 22. We could use distinct to filter out equal ratings - but then it's even less accurate!
+
+
+
+
+3. Which publisher has the best rating?
+
+
+
+```{r}
+books3  <-  books %>% 
+  select(publisher, average_rating) %>% 
+  group_by(publisher) %>% 
+  summarise(mean_of_ratings = mean(average_rating)) %>% 
+  arrange(desc(mean_of_ratings))
+
+head(books3, 12)
+
+# These are the 12 publishers with the highest average ratings.
+
+```
+
+4. 
+
+How many book are published in English?
+
+```{r}
+books4 <- books %>% 
+  group_by(language_code) %>% 
+  summarise(book_count_per_language = n()) %>% 
+  arrange(desc(book_count_per_language))
+
+books4
+
+8909 + 1408 + 214 + 7
+
+
+```
+
+There are 10538 books published in English.
+
+
+5.
+
+What is the percentage of English books published to other languages?
+
+```{r}
+books5 <- books %>% 
+  group_by(language_code) %>% 
+  summarise(book_count_per_language = n()) %>% 
+  arrange(desc(book_count_per_language)) %>% 
+  filter(language_code != "eng", 
+         language_code != "en-US",
+         language_code != "en-CA", 
+         language_code != "en-GB") %>% 
+  summarise(not_english_books = sum(book_count_per_language))
+
+books6 <- books %>% 
+  group_by(language_code) %>% 
+  summarise(book_count_per_language = n()) %>% 
+  arrange(desc(book_count_per_language)) %>% 
+  filter(language_code == "eng" | 
+         language_code == "en-US" |
+         language_code == "en-CA" |
+         language_code == "en-GB") %>% 
+  summarise(english_books = sum(book_count_per_language))
+
+percentage_of_non_english_to_english_books <- books5 / books6 * 100
+
+round(percentage_of_non_english_to_english_books, 2)
+
+
+```
+
+Non-English books represent 5.56% of the books in our dataset.
+
