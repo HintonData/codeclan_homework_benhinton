@@ -1,0 +1,69 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+card_base <- read_csv("data/CardBase.csv")
+customer_base <- read_csv("data/CustomerBase.csv")
+exam_scores <- read_csv("data/exam_scores.csv")
+fraud_base <- read_csv("data/FraudBase.csv")
+hat_observations <- read_csv("data/hat_observations.csv")
+transaction_base <- read_csv("data/TransactionBase.csv")
+```
+
+1. 
+```{r}
+card_base
+customer_base
+fraud_base
+transaction_base
+```
+
+
+2.
+
+
+5.
+```{r}
+hat_observations <- hat_observations %>% 
+  separate(observation, c("hat_colour", "hat_type"),
+           sep = ",")
+
+hat_observations
+  
+```
+
+6. 
+```{r}
+hat_observations <- hat_observations %>% 
+  unite('date', c('year', 'month', 'day'),
+                sep = "-")
+
+hat_observations
+```
+
+
+EXTENSION:
+
+
+2. 
+```{r}
+exam_scores_edited <- exam_scores %>% 
+  pivot_longer(starts_with("exam"),
+               names_to = "exam_question",
+               values_to = "score")
+  
+exam_scores_separate <- exam_scores_edited %>%
+  separate(exam_question, c("blank", "exam_question"),
+         sep = "exam_Q") %>% 
+  select(-"blank") %>% 
+  mutate(exam_question = as.numeric(exam_question))
+
+exam_scores_separate
+```
+
+
+
+
