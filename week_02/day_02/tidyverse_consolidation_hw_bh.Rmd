@@ -1,0 +1,80 @@
+---
+title: "Tidyverse Consolidation Homework"
+output: html_notebook
+---
+
+
+1.
+```{r}
+library(tidyverse)
+library(stringr)
+info <- read_csv("data/code_clan_info.csv")
+tweets <- read_csv("data/code_clan_tweets.csv")
+```
+
+```{r}
+glimpse(tweets)
+```
+
+
+2.
+```{r}
+view(tweets)
+
+tweets %>% 
+  select(favorite_count, is_quote) %>% 
+  filter(is_quote == FALSE) %>% 
+  summarise(favorite_count = sum(favorite_count))
+```
+
+3. 
+```{r}
+tweets %>% 
+  select(is_quote, retweet_count, source) %>% 
+  filter(is_quote == FALSE) %>%
+  group_by(source) %>% 
+  summarise(mean_number_of_retweets = mean(retweet_count))
+```
+
+4.
+```{r}
+tweets %>% 
+  select(favorite_count, media_type) %>% 
+  mutate(media_type = coalesce(media_type, "text")) %>% 
+  group_by(media_type) %>% 
+  summarise(total_number_of_likes = sum(favorite_count)) %>% 
+  arrange()
+```
+
+
+
+5. 
+```{r}
+tweets %>% 
+  select(display_text_width) %>% 
+  summarise(mean_number_of_characters = mean(display_text_width))
+```
+
+6.
+```{r}
+left_join(tweets, info, by = "tweet_id")
+
+view(info)
+```
+
+7.
+```{r}
+codeclan_hashtags <- left_join(tweets, info, by = "tweet_id")
+
+codeclan_hashtags <- codeclan_hashtags %>% 
+  select(tweet_id, hashtags) %>% 
+  filter(hashtags != is.na(hashtags)) %>%
+  mutate(hashtags = tolower(hashtags))
+```
+
+8.
+```{r}
+codeclan_hashtags %>% 
+```
+
+
