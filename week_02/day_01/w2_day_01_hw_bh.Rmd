@@ -15,14 +15,41 @@ transaction_base <- read_csv("data/TransactionBase.csv")
 
 1. 
 ```{r}
+card_base <- janitor::clean_names(card_base)
+customer_base <- janitor::clean_names(customer_base)
+fraud_base <- janitor::clean_names(fraud_base)
+transaction_base <- janitor::clean_names(transaction_base)
+
+
 card_base
 customer_base
-fraud_base
-transaction_base
 ```
 
 
 2.
+```{r}
+card_customer_base <- left_join(card_base, customer_base, by = c("cust_id"))
+
+card_customer_base
+```
+
+3.
+```{r}
+full_join(fraud_base, transaction_base)
+```
+
+4.
+```{r}
+card_base
+transaction_base
+
+
+
+
+semi_join(card_base, transaction_base, by = c("card_number" = "credit_card_id"))
+```
+
+
 
 
 5.
