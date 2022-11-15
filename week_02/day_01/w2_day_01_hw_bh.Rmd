@@ -28,7 +28,7 @@ customer_base
 
 2.
 ```{r}
-card_customer_base <- left_join(card_base, customer_base, by = c("cust_id"))
+card_customer_base <- left_join(card_base, customer_base, by = "cust_id")
 
 card_customer_base
 ```
@@ -37,6 +37,13 @@ card_customer_base
 ```{r}
 full_join(fraud_base, transaction_base)
 ```
+
+Mutating Joins
+Inner, Left, Right - go and fetch extra columns (and rows?!) from foreign table
+
+"Filitering Joins"
+Semi, Anti - filter your "home" table by a foriegn criteriaa
+
 
 4.
 ```{r}
@@ -73,6 +80,15 @@ hat_observations
 
 
 EXTENSION:
+
+
+1.
+```{r}
+card_base %>% 
+  inner_join(customer_base, by = "cust_id") %>% 
+  inner_join(transaction_base, by = c("card_number" = "credit_card_id")) %>% 
+  inner_join(fraud_base, by = "transaction_id")
+```
 
 
 2. 
