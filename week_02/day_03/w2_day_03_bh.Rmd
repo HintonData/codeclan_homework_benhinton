@@ -1,0 +1,143 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+1. 
+
+
+Precipitation, temperature and wind speed are at 12pm.
+
+Wind speed is in kph.
+Temperature is in celsius.
+
+```{r}
+
+
+Thu <- list(temp = 10, chance_of_rain = 65, wind_speed = 20)
+Fri <- list(temp= 11, chance_of_rain = 52, wind_speed = 16)
+Sat <- list(temp = 8, chance_of_rain = 0, wind_speed = 11)
+
+weather <- list(Thu = Thu, Fri = Fri, Sat = Sat)
+
+weather
+
+
+```
+
+2.
+```{r}
+#i
+weather$Thu$chance_of_rain
+
+#ii
+weather$Fri$wind_speed
+
+#iii
+weather$Thu$temp
+
+
+```
+
+3. 
+```{r}
+fourteen_day_forecast <- matrix(c(10, 11, 8, 8, 8, 7, 8, 9, 9, 9, 8, 8, 8, 8), nrow = 2, ncol = 7, byrow = TRUE)
+
+fourteen_day_forecast
+```
+
+4.
+```{r}
+#i
+fourteen_day_forecast[2,3]
+
+#ii
+fourteen_day_forecast[2,]
+
+#iii
+fourteen_day_forecast[c(1,2), c(1, 3, 5)]
+```
+
+5.
+failed piece of code...
+```{r}
+answerer <- function(x){
+  if (is.character(x) == TRUE){
+    str_c("The answer is: ", x)
+    
+    if (is.numeric(x) == TRUE & x >= 10){
+      return(x / 10)
+    }  
+        else {
+            return(x)
+    }
+}} 
+      
+    print("Invalid input")
+  
+
+
+answerer("hel")
+```
+
+Got it to work!
+```{r}
+answerer2 <- function(x){
+  if (is.character(x) == TRUE){
+      str_c("The answer is: ", x)
+  }
+  else if (is.numeric(x) == TRUE & x > 10){
+      return(x / 10)
+  }
+  else if (is.numeric(x) == TRUE & x < 10){
+      return(x)
+  } else {
+      print("Invalid input")
+  }
+}
+
+answerer2("hi")
+answerer2(TRUE)
+answerer2(9)
+answerer2(11)
+
+
+```
+
+6. 
+```{r}
+vector_checker <- function(x, y){
+  if (sort(x) == sort(y)){
+    return("Exactly the same.")
+  }
+  else if (c(x) == c(y)){
+    return("The same")
+  }
+}
+
+test_vector <- c(1, 2, 3, 4)
+test_vector2 <- c(4, 3, 2, 1)
+test_vector3 <- c(5, 6, 7, 8)
+
+vector_checker(test_vector, test_vector2)
+```
+
+```{r}
+vector_checker <- function(x, y){
+  if (c(x) == c(y)){
+    return("The same")
+  }
+}
+
+test_vector <- c(1, 2, 3, 4)
+test_vector2 <- c(4, 3, 2, 1)
+test_vector3 <- c(5, 6, 7, 8)
+test_vector4 <- c(1,2,3,4)
+
+vector_checker(test_vector, test_vector4)
+```
+
+

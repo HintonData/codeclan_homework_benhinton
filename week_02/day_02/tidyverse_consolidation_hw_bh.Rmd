@@ -24,7 +24,7 @@ view(tweets)
 tweets %>% 
   select(favorite_count, is_quote) %>% 
   filter(is_quote == FALSE) %>% 
-  summarise(favorite_count = sum(favorite_count))
+  summarise(favorite_count_total = sum(favorite_count))
 ```
 
 3. 
@@ -42,17 +42,46 @@ tweets %>%
   select(favorite_count, media_type) %>% 
   mutate(media_type = coalesce(media_type, "text")) %>% 
   group_by(media_type) %>% 
-  summarise(total_number_of_likes = sum(favorite_count)) %>% 
-  arrange()
+  summarise(total_number_of_likes = sum(favorite_count))
 ```
 
 
 
 5. 
 ```{r}
-tweets %>% 
+mean_display_text_width <- tweets %>% 
   select(display_text_width) %>% 
-  summarise(mean_number_of_characters = mean(display_text_width))
+  summarise(mean_number_of_characters = mean(display_text_width)) %>% 
+  pull()
+
+mean_text <- tweets %>% 
+  select(text) %>% 
+  summarise(mean_number_of_characters = mean(nchar(c(text)))) %>% 
+  pull()
+
+mean_display_text_width == mean_text
+
+mean_text
+
+tweets %>% 
+   mutate(text_width = str_length(text),
+          diff_chars = text_width - display_text_width) %>% 
+  summarise(matches = sum(diff_chars == 0) / n(),
+            too_small = sum(text_width > display_text_width) / n(),
+            too_large = sum(text_width < display_text_width) / n(),
+            mean_diff = mean(diff_chars))
+
+tweets %>% 
+  filter(display_text_width == 0)
+
+
+tweets %>% 
+  ggplot(aes(x = display_text_width)) +
+  geom_histogram()
+
+tweets %>% 
+  filter(display_text_width == 0)
+
 ```
 
 6.
@@ -70,11 +99,26 @@ codeclan_hashtags <- codeclan_hashtags %>%
   select(tweet_id, hashtags) %>% 
   filter(hashtags != is.na(hashtags)) %>%
   mutate(hashtags = tolower(hashtags))
+
+codeclan_hashtags
 ```
 
 8.
 ```{r}
-codeclan_hashtags %>% 
+pattern <- "c\\("
+
+codeclan_hashtags %>%
+  select(hashtags) %>% 
+  str_sub(pattern, start = 1, end = 2)
+
 ```
+
+9.
+```{r}
+tweets %>% 
+  str_detect(text, "Edinburgh")
+```
+
+
 
 
