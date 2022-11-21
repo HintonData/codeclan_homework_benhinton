@@ -127,7 +127,11 @@ vector_checker(test_vector, test_vector2)
 
 ```{r}
 vector_checker <- function(x, y){
-  if (c(x) == c(y)){
+  if (all((x)) == all((y))){
+    return("The same")
+  }
+  
+  if (all(sort(x)) == sort(y)) {
     return("The same")
   }
 }
@@ -135,9 +139,96 @@ vector_checker <- function(x, y){
 test_vector <- c(1, 2, 3, 4)
 test_vector2 <- c(4, 3, 2, 1)
 test_vector3 <- c(5, 6, 7, 8)
-test_vector4 <- c(1,2,3,4)
+test_vector4 <- c(1, 2, 3, 4)
 
 vector_checker(test_vector, test_vector4)
 ```
+
+1. if x and y are exactly the same
+1.1   return exactly the same
+
+2. if x and y are similar
+2.1   return they are similar
+
+3. return different
+```{r}
+x <- c(1, 2, 3)
+y <-c(1, 2, 3)
+z <- c(3, 2, 1)
+
+#1. if x and y are exactly the same
+if (identical(x, y)) {
+  print("Exactly the same")
+}
+
+#2. if x and y are similar
+if (identical(sort(x), sort(y))) {
+  print("The same")
+}
+
+#3. return different
+print("Different")
+```
+
+```{r}
+is_similar <- function(x, y) {
+  
+  #1. if x and y are exactly the same
+  if (identical(x, y)) {
+    return("Exactly the same")
+  }
+  
+  #2. if x and y are similar
+  if (identical(sort(x), sort(y))) {
+    return("The same")
+  }
+  
+  #3. return different
+  return("Different")
+}
+
+vector_1 <- c(1, 2, 3)
+vector_2 <- c(3, 2, 1)
+vector_3 <- c(4, 2, 1)
+
+is_similar(x = vector_1, y = vector_1)
+```
+
+Note: return() kicks you out of the function
+
+Questoin 7
+
+1 2 3 
+2 4 6
+3 6 9
+
+
+1. make an empty 12*12 matrix
+
+2. loop through the matrix
+2.1 set each cell value = row number * column number
+
+```{r}
+# 1. make an empty matrix
+m <- matrix(nrow = 12, ncol = 12)
+
+
+# 2. loop through the matrix
+#2.1 for the number of rows
+for(i in 1:nrow(m)) {
+  print(i)
+  print("Row i: ")
+  # 2.2. for the number of columns
+  for (j in 1:ncol(m)) {
+    #2. 3 set each cell value = row number * column number
+    m[i, j] <- i * j
+  }
+}
+
+m
+```
+
+i = iterator
+
 
 

@@ -1951,9 +1951,13 @@ vector_checker(test_vector, test_vector2)</code></pre>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudmVjdG9yX2NoZWNrZXIgPC0gZnVuY3Rpb24oeCwgeSl7XG4gIGlmIChjKHgpID09IGMoeSkpe1xuICAgIHJldHVybihcIlRoZSBzYW1lXCIpXG4gIH1cbn1cblxudGVzdF92ZWN0b3IgPC0gYygxLCAyLCAzLCA0KVxudGVzdF92ZWN0b3IyIDwtIGMoNCwgMywgMiwgMSlcbnRlc3RfdmVjdG9yMyA8LSBjKDUsIDYsIDcsIDgpXG50ZXN0X3ZlY3RvcjQgPC0gYygxLDIsMyw0KVxuXG52ZWN0b3JfY2hlY2tlcih0ZXN0X3ZlY3RvciwgdGVzdF92ZWN0b3I0KVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudmVjdG9yX2NoZWNrZXIgPC0gZnVuY3Rpb24oeCwgeSl7XG4gIGlmIChhbGwoKHgpKSA9PSBhbGwoKHkpKSl7XG4gICAgcmV0dXJuKFwiVGhlIHNhbWVcIilcbiAgfVxuICBcbiAgaWYgKGFsbChzb3J0KHgpKSA9PSBzb3J0KHkpKSB7XG4gICAgcmV0dXJuKFwiVGhlIHNhbWVcIilcbiAgfVxufVxuXG50ZXN0X3ZlY3RvciA8LSBjKDEsIDIsIDMsIDQpXG50ZXN0X3ZlY3RvcjIgPC0gYyg0LCAzLCAyLCAxKVxudGVzdF92ZWN0b3IzIDwtIGMoNSwgNiwgNywgOClcbnRlc3RfdmVjdG9yNCA8LSBjKDEsIDIsIDMsIDQpXG5cbnZlY3Rvcl9jaGVja2VyKHRlc3RfdmVjdG9yLCB0ZXN0X3ZlY3RvcjQpXG5gYGAifQ== -->
 <pre class="r"><code>vector_checker &lt;- function(x, y){
-  if (c(x) == c(y)){
+  if (all((x)) == all((y))){
+    return(&quot;The same&quot;)
+  }
+  
+  if (all(sort(x)) == sort(y)) {
     return(&quot;The same&quot;)
   }
 }
@@ -1961,18 +1965,156 @@ vector_checker(test_vector, test_vector2)</code></pre>
 test_vector &lt;- c(1, 2, 3, 4)
 test_vector2 &lt;- c(4, 3, 2, 1)
 test_vector3 &lt;- c(5, 6, 7, 8)
-test_vector4 &lt;- c(1,2,3,4)
+test_vector4 &lt;- c(1, 2, 3, 4)
 
 vector_checker(test_vector, test_vector4)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gaWYgKGMoeCkgPT0gYyh5KSkgeyA6IHRoZSBjb25kaXRpb24gaGFzIGxlbmd0aCA+IDFcbiJ9 -->
-<pre><code>Error in if (c(x) == c(y)) { : the condition has length &gt; 1</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogY29lcmNpbmcgYXJndW1lbnQgb2YgdHlwZSAnZG91YmxlJyB0byBsb2dpY2FsV2FybmluZzogY29lcmNpbmcgYXJndW1lbnQgb2YgdHlwZSAnZG91YmxlJyB0byBsb2dpY2FsXG4ifQ== -->
+<pre><code>Warning: coercing argument of type &#39;double&#39; to logicalWarning: coercing argument of type &#39;double&#39; to logical</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiVGhlIHNhbWVcIlxuIn0= -->
+<pre><code>[1] &quot;The same&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<ol style="list-style-type: decimal">
+<li><p>if x and y are exactly the same 1.1 return exactly the
+same</p></li>
+<li><p>if x and y are similar 2.1 return they are similar</p></li>
+<li><p>return different</p></li>
+</ol>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxueCA8LSBjKDEsIDIsIDMpXG55IDwtYygxLCAyLCAzKVxueiA8LSBjKDMsIDIsIDEpXG5cbiMxLiBpZiB4IGFuZCB5IGFyZSBleGFjdGx5IHRoZSBzYW1lXG5pZiAoaWRlbnRpY2FsKHgsIHkpKSB7XG4gIHByaW50KFwiRXhhY3RseSB0aGUgc2FtZVwiKVxufVxuYGBgIn0= -->
+<pre class="r"><code>x &lt;- c(1, 2, 3)
+y &lt;-c(1, 2, 3)
+z &lt;- c(3, 2, 1)
+
+#1. if x and y are exactly the same
+if (identical(x, y)) {
+  print(&quot;Exactly the same&quot;)
+}</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiRXhhY3RseSB0aGUgc2FtZVwiXG4ifQ== -->
+<pre><code>[1] &quot;Exactly the same&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIzIuIGlmIHggYW5kIHkgYXJlIHNpbWlsYXJcbmlmIChpZGVudGljYWwoc29ydCh4KSwgc29ydCh5KSkpIHtcbiAgcHJpbnQoXCJUaGUgc2FtZVwiKVxufVxuYGBgIn0= -->
+<pre class="r"><code>#2. if x and y are similar
+if (identical(sort(x), sort(y))) {
+  print(&quot;The same&quot;)
+}</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiVGhlIHNhbWVcIlxuIn0= -->
+<pre><code>[1] &quot;The same&quot;</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaXNfc2ltaWxhciA8LSBmdW5jdGlvbih4LCB5KSB7XG4gIFxuICAjMS4gaWYgeCBhbmQgeSBhcmUgZXhhY3RseSB0aGUgc2FtZVxuICBpZiAoaWRlbnRpY2FsKHgsIHkpKSB7XG4gICAgcmV0dXJuKFwiRXhhY3RseSB0aGUgc2FtZVwiKVxuICB9XG4gIFxuICAjMi4gaWYgeCBhbmQgeSBhcmUgc2ltaWxhclxuICBpZiAoaWRlbnRpY2FsKHNvcnQoeCksIHNvcnQoeSkpKSB7XG4gICAgcmV0dXJuKFwiVGhlIHNhbWVcIilcbiAgfVxuICBcbiAgIzMuIHJldHVybiBkaWZmZXJlbnRcbiAgcmV0dXJuKFwiRGlmZmVyZW50XCIpXG59XG5cbnZlY3Rvcl8xIDwtIGMoMSwgMiwgMylcbnZlY3Rvcl8yIDwtIGMoMywgMiwgMSlcbnZlY3Rvcl8zIDwtIGMoNCwgMiwgMSlcblxuaXNfc2ltaWxhcih4ID0gdmVjdG9yXzEsIHkgPSB2ZWN0b3JfMSlcbmBgYCJ9 -->
+<pre class="r"><code>is_similar &lt;- function(x, y) {
+  
+  #1. if x and y are exactly the same
+  if (identical(x, y)) {
+    return(&quot;Exactly the same&quot;)
+  }
+  
+  #2. if x and y are similar
+  if (identical(sort(x), sort(y))) {
+    return(&quot;The same&quot;)
+  }
+  
+  #3. return different
+  return(&quot;Different&quot;)
+}
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKYGBge3J9CmxpYnJhcnkodGlkeXZlcnNlKQpgYGAKMS4gCgoKUHJlY2lwaXRhdGlvbiwgdGVtcGVyYXR1cmUgYW5kIHdpbmQgc3BlZWQgYXJlIGF0IDEycG0uCgpXaW5kIHNwZWVkIGlzIGluIGtwaC4KVGVtcGVyYXR1cmUgaXMgaW4gY2Vsc2l1cy4KCmBgYHtyfQoKClRodSA8LSBsaXN0KHRlbXAgPSAxMCwgY2hhbmNlX29mX3JhaW4gPSA2NSwgd2luZF9zcGVlZCA9IDIwKQpGcmkgPC0gbGlzdCh0ZW1wPSAxMSwgY2hhbmNlX29mX3JhaW4gPSA1Miwgd2luZF9zcGVlZCA9IDE2KQpTYXQgPC0gbGlzdCh0ZW1wID0gOCwgY2hhbmNlX29mX3JhaW4gPSAwLCB3aW5kX3NwZWVkID0gMTEpCgp3ZWF0aGVyIDwtIGxpc3QoVGh1ID0gVGh1LCBGcmkgPSBGcmksIFNhdCA9IFNhdCkKCndlYXRoZXIKCgpgYGAKCjIuCmBgYHtyfQojaQp3ZWF0aGVyJFRodSRjaGFuY2Vfb2ZfcmFpbgoKI2lpCndlYXRoZXIkRnJpJHdpbmRfc3BlZWQKCiNpaWkKd2VhdGhlciRUaHUkdGVtcAoKCmBgYAoKMy4gCmBgYHtyfQpmb3VydGVlbl9kYXlfZm9yZWNhc3QgPC0gbWF0cml4KGMoMTAsIDExLCA4LCA4LCA4LCA3LCA4LCA5LCA5LCA5LCA4LCA4LCA4LCA4KSwgbnJvdyA9IDIsIG5jb2wgPSA3LCBieXJvdyA9IFRSVUUpCgpmb3VydGVlbl9kYXlfZm9yZWNhc3QKYGBgCgo0LgpgYGB7cn0KI2kKZm91cnRlZW5fZGF5X2ZvcmVjYXN0WzIsM10KCiNpaQpmb3VydGVlbl9kYXlfZm9yZWNhc3RbMixdCgojaWlpCmZvdXJ0ZWVuX2RheV9mb3JlY2FzdFtjKDEsMiksIGMoMSwgMywgNSldCmBgYAoKNS4KZmFpbGVkIHBpZWNlIG9mIGNvZGUuLi4KYGBge3J9CmFuc3dlcmVyIDwtIGZ1bmN0aW9uKHgpewogIGlmIChpcy5jaGFyYWN0ZXIoeCkgPT0gVFJVRSl7CiAgICBzdHJfYygiVGhlIGFuc3dlciBpczogIiwgeCkKICAgIAogICAgaWYgKGlzLm51bWVyaWMoeCkgPT0gVFJVRSAmIHggPj0gMTApewogICAgICByZXR1cm4oeCAvIDEwKQogICAgfSAgCiAgICAgICAgZWxzZSB7CiAgICAgICAgICAgIHJldHVybih4KQogICAgfQp9fSAKICAgICAgCiAgICBwcmludCgiSW52YWxpZCBpbnB1dCIpCiAgCgoKYW5zd2VyZXIoImhlbCIpCmBgYAoKR290IGl0IHRvIHdvcmshCmBgYHtyfQphbnN3ZXJlcjIgPC0gZnVuY3Rpb24oeCl7CiAgaWYgKGlzLmNoYXJhY3Rlcih4KSA9PSBUUlVFKXsKICAgICAgc3RyX2MoIlRoZSBhbnN3ZXIgaXM6ICIsIHgpCiAgfQogIGVsc2UgaWYgKGlzLm51bWVyaWMoeCkgPT0gVFJVRSAmIHggPiAxMCl7CiAgICAgIHJldHVybih4IC8gMTApCiAgfQogIGVsc2UgaWYgKGlzLm51bWVyaWMoeCkgPT0gVFJVRSAmIHggPCAxMCl7CiAgICAgIHJldHVybih4KQogIH0gZWxzZSB7CiAgICAgIHByaW50KCJJbnZhbGlkIGlucHV0IikKICB9Cn0KCmFuc3dlcmVyMigiaGkiKQphbnN3ZXJlcjIoVFJVRSkKYW5zd2VyZXIyKDkpCmFuc3dlcmVyMigxMSkKCgpgYGAKCjYuIApgYGB7cn0KdmVjdG9yX2NoZWNrZXIgPC0gZnVuY3Rpb24oeCwgeSl7CiAgaWYgKHNvcnQoeCkgPT0gc29ydCh5KSl7CiAgICByZXR1cm4oIkV4YWN0bHkgdGhlIHNhbWUuIikKICB9CiAgZWxzZSBpZiAoYyh4KSA9PSBjKHkpKXsKICAgIHJldHVybigiVGhlIHNhbWUiKQogIH0KfQoKdGVzdF92ZWN0b3IgPC0gYygxLCAyLCAzLCA0KQp0ZXN0X3ZlY3RvcjIgPC0gYyg0LCAzLCAyLCAxKQp0ZXN0X3ZlY3RvcjMgPC0gYyg1LCA2LCA3LCA4KQoKdmVjdG9yX2NoZWNrZXIodGVzdF92ZWN0b3IsIHRlc3RfdmVjdG9yMikKYGBgCgpgYGB7cn0KdmVjdG9yX2NoZWNrZXIgPC0gZnVuY3Rpb24oeCwgeSl7CiAgaWYgKGMoeCkgPT0gYyh5KSl7CiAgICByZXR1cm4oIlRoZSBzYW1lIikKICB9Cn0KCnRlc3RfdmVjdG9yIDwtIGMoMSwgMiwgMywgNCkKdGVzdF92ZWN0b3IyIDwtIGMoNCwgMywgMiwgMSkKdGVzdF92ZWN0b3IzIDwtIGMoNSwgNiwgNywgOCkKdGVzdF92ZWN0b3I0IDwtIGMoMSwyLDMsNCkKCnZlY3Rvcl9jaGVja2VyKHRlc3RfdmVjdG9yLCB0ZXN0X3ZlY3RvcjQpCmBgYAoKCg==</div>
+vector_1 &lt;- c(1, 2, 3)
+vector_2 &lt;- c(3, 2, 1)
+vector_3 &lt;- c(4, 2, 1)
+
+is_similar(x = vector_1, y = vector_1)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiRXhhY3RseSB0aGUgc2FtZVwiXG4ifQ== -->
+<pre><code>[1] &quot;Exactly the same&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Note: return() kicks you out of the function</p>
+<p>Questoin 7</p>
+<p>1 2 3 2 4 6 3 6 9</p>
+<ol style="list-style-type: decimal">
+<li><p>make an empty 12*12 matrix</p></li>
+<li><p>loop through the matrix 2.1 set each cell value = row number *
+column number</p></li>
+</ol>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyAxLiBtYWtlIGFuIGVtcHR5IG1hdHJpeFxubSA8LSBtYXRyaXgobnJvdyA9IDEyLCBuY29sID0gMTIpXG5cblxuIyAyLiBsb29wIHRocm91Z2ggdGhlIG1hdHJpeFxuIzIuMSBmb3IgdGhlIG51bWJlciBvZiByb3dzXG5mb3IoaSBpbiAxOm5yb3cobSkpIHtcbiAgcHJpbnQoaSlcbiAgcHJpbnQoXCJSb3cgaTogXCIpXG4gICMgMi4yLiBmb3IgdGhlIG51bWJlciBvZiBjb2x1bW5zXG4gIGZvciAoaiBpbiAxOm5jb2wobSkpIHtcbiAgICBtW2ksIGpdIDwtIGkgKiBqXG4gIH1cbn1cbmBgYCJ9 -->
+<pre class="r"><code># 1. make an empty matrix
+m &lt;- matrix(nrow = 12, ncol = 12)
+
+
+# 2. loop through the matrix
+#2.1 for the number of rows
+for(i in 1:nrow(m)) {
+  print(i)
+  print(&quot;Row i: &quot;)
+  # 2.2. for the number of columns
+  for (j in 1:ncol(m)) {
+    m[i, j] &lt;- i * j
+  }
+}</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDFcblsxXSBcIlJvdyBpOiBcIlxuWzFdIDJcblsxXSBcIlJvdyBpOiBcIlxuWzFdIDNcblsxXSBcIlJvdyBpOiBcIlxuWzFdIDRcblsxXSBcIlJvdyBpOiBcIlxuWzFdIDVcblsxXSBcIlJvdyBpOiBcIlxuWzFdIDZcblsxXSBcIlJvdyBpOiBcIlxuWzFdIDdcblsxXSBcIlJvdyBpOiBcIlxuWzFdIDhcblsxXSBcIlJvdyBpOiBcIlxuWzFdIDlcblsxXSBcIlJvdyBpOiBcIlxuWzFdIDEwXG5bMV0gXCJSb3cgaTogXCJcblsxXSAxMVxuWzFdIFwiUm93IGk6IFwiXG5bMV0gMTJcblsxXSBcIlJvdyBpOiBcIlxuIn0= -->
+<pre><code>[1] 1
+[1] &quot;Row i: &quot;
+[1] 2
+[1] &quot;Row i: &quot;
+[1] 3
+[1] &quot;Row i: &quot;
+[1] 4
+[1] &quot;Row i: &quot;
+[1] 5
+[1] &quot;Row i: &quot;
+[1] 6
+[1] &quot;Row i: &quot;
+[1] 7
+[1] &quot;Row i: &quot;
+[1] 8
+[1] &quot;Row i: &quot;
+[1] 9
+[1] &quot;Row i: &quot;
+[1] 10
+[1] &quot;Row i: &quot;
+[1] 11
+[1] &quot;Row i: &quot;
+[1] 12
+[1] &quot;Row i: &quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubVxuYGBgIn0= -->
+<pre class="r"><code>m</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgWywxXSBbLDJdIFssM10gWyw0XSBbLDVdIFssNl0gWyw3XSBbLDhdIFssOV0gWywxMF0gWywxMV0gWywxMl1cbiBbMSxdICAgIDEgICAgMiAgICAzICAgIDQgICAgNSAgICA2ICAgIDcgICAgOCAgICA5ICAgIDEwICAgIDExICAgIDEyXG4gWzIsXSAgICAyICAgIDQgICAgNiAgICA4ICAgMTAgICAxMiAgIDE0ICAgMTYgICAxOCAgICAyMCAgICAyMiAgICAyNFxuIFszLF0gICAgMyAgICA2ICAgIDkgICAxMiAgIDE1ICAgMTggICAyMSAgIDI0ICAgMjcgICAgMzAgICAgMzMgICAgMzZcbiBbNCxdICAgIDQgICAgOCAgIDEyICAgMTYgICAyMCAgIDI0ICAgMjggICAzMiAgIDM2ICAgIDQwICAgIDQ0ICAgIDQ4XG4gWzUsXSAgICA1ICAgMTAgICAxNSAgIDIwICAgMjUgICAzMCAgIDM1ICAgNDAgICA0NSAgICA1MCAgICA1NSAgICA2MFxuIFs2LF0gICAgNiAgIDEyICAgMTggICAyNCAgIDMwICAgMzYgICA0MiAgIDQ4ICAgNTQgICAgNjAgICAgNjYgICAgNzJcbiBbNyxdICAgIDcgICAxNCAgIDIxICAgMjggICAzNSAgIDQyICAgNDkgICA1NiAgIDYzICAgIDcwICAgIDc3ICAgIDg0XG4gWzgsXSAgICA4ICAgMTYgICAyNCAgIDMyICAgNDAgICA0OCAgIDU2ICAgNjQgICA3MiAgICA4MCAgICA4OCAgICA5NlxuIFs5LF0gICAgOSAgIDE4ICAgMjcgICAzNiAgIDQ1ICAgNTQgICA2MyAgIDcyICAgODEgICAgOTAgICAgOTkgICAxMDhcblsxMCxdICAgMTAgICAyMCAgIDMwICAgNDAgICA1MCAgIDYwICAgNzAgICA4MCAgIDkwICAgMTAwICAgMTEwICAgMTIwXG5bMTEsXSAgIDExICAgMjIgICAzMyAgIDQ0ICAgNTUgICA2NiAgIDc3ICAgODggICA5OSAgIDExMCAgIDEyMSAgIDEzMlxuWzEyLF0gICAxMiAgIDI0ICAgMzYgICA0OCAgIDYwICAgNzIgICA4NCAgIDk2ICAxMDggICAxMjAgICAxMzIgICAxNDRcbiJ9 -->
+<pre><code>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
+ [1,]    1    2    3    4    5    6    7    8    9    10    11    12
+ [2,]    2    4    6    8   10   12   14   16   18    20    22    24
+ [3,]    3    6    9   12   15   18   21   24   27    30    33    36
+ [4,]    4    8   12   16   20   24   28   32   36    40    44    48
+ [5,]    5   10   15   20   25   30   35   40   45    50    55    60
+ [6,]    6   12   18   24   30   36   42   48   54    60    66    72
+ [7,]    7   14   21   28   35   42   49   56   63    70    77    84
+ [8,]    8   16   24   32   40   48   56   64   72    80    88    96
+ [9,]    9   18   27   36   45   54   63   72   81    90    99   108
+[10,]   10   20   30   40   50   60   70   80   90   100   110   120
+[11,]   11   22   33   44   55   66   77   88   99   110   121   132
+[12,]   12   24   36   48   60   72   84   96  108   120   132   144</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>i = iterator</p>
+<!-- rnb-text-end -->
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKYGBge3J9CmxpYnJhcnkodGlkeXZlcnNlKQpgYGAKMS4gCgoKUHJlY2lwaXRhdGlvbiwgdGVtcGVyYXR1cmUgYW5kIHdpbmQgc3BlZWQgYXJlIGF0IDEycG0uCgpXaW5kIHNwZWVkIGlzIGluIGtwaC4KVGVtcGVyYXR1cmUgaXMgaW4gY2Vsc2l1cy4KCmBgYHtyfQoKClRodSA8LSBsaXN0KHRlbXAgPSAxMCwgY2hhbmNlX29mX3JhaW4gPSA2NSwgd2luZF9zcGVlZCA9IDIwKQpGcmkgPC0gbGlzdCh0ZW1wPSAxMSwgY2hhbmNlX29mX3JhaW4gPSA1Miwgd2luZF9zcGVlZCA9IDE2KQpTYXQgPC0gbGlzdCh0ZW1wID0gOCwgY2hhbmNlX29mX3JhaW4gPSAwLCB3aW5kX3NwZWVkID0gMTEpCgp3ZWF0aGVyIDwtIGxpc3QoVGh1ID0gVGh1LCBGcmkgPSBGcmksIFNhdCA9IFNhdCkKCndlYXRoZXIKCgpgYGAKCjIuCmBgYHtyfQojaQp3ZWF0aGVyJFRodSRjaGFuY2Vfb2ZfcmFpbgoKI2lpCndlYXRoZXIkRnJpJHdpbmRfc3BlZWQKCiNpaWkKd2VhdGhlciRUaHUkdGVtcAoKCmBgYAoKMy4gCmBgYHtyfQpmb3VydGVlbl9kYXlfZm9yZWNhc3QgPC0gbWF0cml4KGMoMTAsIDExLCA4LCA4LCA4LCA3LCA4LCA5LCA5LCA5LCA4LCA4LCA4LCA4KSwgbnJvdyA9IDIsIG5jb2wgPSA3LCBieXJvdyA9IFRSVUUpCgpmb3VydGVlbl9kYXlfZm9yZWNhc3QKYGBgCgo0LgpgYGB7cn0KI2kKZm91cnRlZW5fZGF5X2ZvcmVjYXN0WzIsM10KCiNpaQpmb3VydGVlbl9kYXlfZm9yZWNhc3RbMixdCgojaWlpCmZvdXJ0ZWVuX2RheV9mb3JlY2FzdFtjKDEsMiksIGMoMSwgMywgNSldCmBgYAoKNS4KZmFpbGVkIHBpZWNlIG9mIGNvZGUuLi4KYGBge3J9CmFuc3dlcmVyIDwtIGZ1bmN0aW9uKHgpewogIGlmIChpcy5jaGFyYWN0ZXIoeCkgPT0gVFJVRSl7CiAgICBzdHJfYygiVGhlIGFuc3dlciBpczogIiwgeCkKICAgIAogICAgaWYgKGlzLm51bWVyaWMoeCkgPT0gVFJVRSAmIHggPj0gMTApewogICAgICByZXR1cm4oeCAvIDEwKQogICAgfSAgCiAgICAgICAgZWxzZSB7CiAgICAgICAgICAgIHJldHVybih4KQogICAgfQp9fSAKICAgICAgCiAgICBwcmludCgiSW52YWxpZCBpbnB1dCIpCiAgCgoKYW5zd2VyZXIoImhlbCIpCmBgYAoKR290IGl0IHRvIHdvcmshCmBgYHtyfQphbnN3ZXJlcjIgPC0gZnVuY3Rpb24oeCl7CiAgaWYgKGlzLmNoYXJhY3Rlcih4KSA9PSBUUlVFKXsKICAgICAgc3RyX2MoIlRoZSBhbnN3ZXIgaXM6ICIsIHgpCiAgfQogIGVsc2UgaWYgKGlzLm51bWVyaWMoeCkgPT0gVFJVRSAmIHggPiAxMCl7CiAgICAgIHJldHVybih4IC8gMTApCiAgfQogIGVsc2UgaWYgKGlzLm51bWVyaWMoeCkgPT0gVFJVRSAmIHggPCAxMCl7CiAgICAgIHJldHVybih4KQogIH0gZWxzZSB7CiAgICAgIHByaW50KCJJbnZhbGlkIGlucHV0IikKICB9Cn0KCmFuc3dlcmVyMigiaGkiKQphbnN3ZXJlcjIoVFJVRSkKYW5zd2VyZXIyKDkpCmFuc3dlcmVyMigxMSkKCgpgYGAKCjYuIApgYGB7cn0KdmVjdG9yX2NoZWNrZXIgPC0gZnVuY3Rpb24oeCwgeSl7CiAgaWYgKHNvcnQoeCkgPT0gc29ydCh5KSl7CiAgICByZXR1cm4oIkV4YWN0bHkgdGhlIHNhbWUuIikKICB9CiAgZWxzZSBpZiAoYyh4KSA9PSBjKHkpKXsKICAgIHJldHVybigiVGhlIHNhbWUiKQogIH0KfQoKdGVzdF92ZWN0b3IgPC0gYygxLCAyLCAzLCA0KQp0ZXN0X3ZlY3RvcjIgPC0gYyg0LCAzLCAyLCAxKQp0ZXN0X3ZlY3RvcjMgPC0gYyg1LCA2LCA3LCA4KQoKdmVjdG9yX2NoZWNrZXIodGVzdF92ZWN0b3IsIHRlc3RfdmVjdG9yMikKYGBgCgpgYGB7cn0KdmVjdG9yX2NoZWNrZXIgPC0gZnVuY3Rpb24oeCwgeSl7CiAgaWYgKGFsbCgoeCkpID09IGFsbCgoeSkpKXsKICAgIHJldHVybigiVGhlIHNhbWUiKQogIH0KICAKICBpZiAoYWxsKHNvcnQoeCkpID09IHNvcnQoeSkpIHsKICAgIHJldHVybigiVGhlIHNhbWUiKQogIH0KfQoKdGVzdF92ZWN0b3IgPC0gYygxLCAyLCAzLCA0KQp0ZXN0X3ZlY3RvcjIgPC0gYyg0LCAzLCAyLCAxKQp0ZXN0X3ZlY3RvcjMgPC0gYyg1LCA2LCA3LCA4KQp0ZXN0X3ZlY3RvcjQgPC0gYygxLCAyLCAzLCA0KQoKdmVjdG9yX2NoZWNrZXIodGVzdF92ZWN0b3IsIHRlc3RfdmVjdG9yNCkKYGBgCgoxLiBpZiB4IGFuZCB5IGFyZSBleGFjdGx5IHRoZSBzYW1lCjEuMSAgIHJldHVybiBleGFjdGx5IHRoZSBzYW1lCgoyLiBpZiB4IGFuZCB5IGFyZSBzaW1pbGFyCjIuMSAgIHJldHVybiB0aGV5IGFyZSBzaW1pbGFyCgozLiByZXR1cm4gZGlmZmVyZW50CmBgYHtyfQp4IDwtIGMoMSwgMiwgMykKeSA8LWMoMSwgMiwgMykKeiA8LSBjKDMsIDIsIDEpCgojMS4gaWYgeCBhbmQgeSBhcmUgZXhhY3RseSB0aGUgc2FtZQppZiAoaWRlbnRpY2FsKHgsIHkpKSB7CiAgcHJpbnQoIkV4YWN0bHkgdGhlIHNhbWUiKQp9CgojMi4gaWYgeCBhbmQgeSBhcmUgc2ltaWxhcgppZiAoaWRlbnRpY2FsKHNvcnQoeCksIHNvcnQoeSkpKSB7CiAgcHJpbnQoIlRoZSBzYW1lIikKfQoKIzMuIHJldHVybiBkaWZmZXJlbnQKcHJpbnQoIkRpZmZlcmVudCIpCmBgYAoKYGBge3J9CmlzX3NpbWlsYXIgPC0gZnVuY3Rpb24oeCwgeSkgewogIAogICMxLiBpZiB4IGFuZCB5IGFyZSBleGFjdGx5IHRoZSBzYW1lCiAgaWYgKGlkZW50aWNhbCh4LCB5KSkgewogICAgcmV0dXJuKCJFeGFjdGx5IHRoZSBzYW1lIikKICB9CiAgCiAgIzIuIGlmIHggYW5kIHkgYXJlIHNpbWlsYXIKICBpZiAoaWRlbnRpY2FsKHNvcnQoeCksIHNvcnQoeSkpKSB7CiAgICByZXR1cm4oIlRoZSBzYW1lIikKICB9CiAgCiAgIzMuIHJldHVybiBkaWZmZXJlbnQKICByZXR1cm4oIkRpZmZlcmVudCIpCn0KCnZlY3Rvcl8xIDwtIGMoMSwgMiwgMykKdmVjdG9yXzIgPC0gYygzLCAyLCAxKQp2ZWN0b3JfMyA8LSBjKDQsIDIsIDEpCgppc19zaW1pbGFyKHggPSB2ZWN0b3JfMSwgeSA9IHZlY3Rvcl8xKQpgYGAKCk5vdGU6IHJldHVybigpIGtpY2tzIHlvdSBvdXQgb2YgdGhlIGZ1bmN0aW9uCgpRdWVzdG9pbiA3CgoxIDIgMyAKMiA0IDYKMyA2IDkKCgoxLiBtYWtlIGFuIGVtcHR5IDEyKjEyIG1hdHJpeAoKMi4gbG9vcCB0aHJvdWdoIHRoZSBtYXRyaXgKMi4xIHNldCBlYWNoIGNlbGwgdmFsdWUgPSByb3cgbnVtYmVyICogY29sdW1uIG51bWJlcgoKYGBge3J9CiMgMS4gbWFrZSBhbiBlbXB0eSBtYXRyaXgKbSA8LSBtYXRyaXgobnJvdyA9IDEyLCBuY29sID0gMTIpCgoKIyAyLiBsb29wIHRocm91Z2ggdGhlIG1hdHJpeAojMi4xIGZvciB0aGUgbnVtYmVyIG9mIHJvd3MKZm9yKGkgaW4gMTpucm93KG0pKSB7CiAgcHJpbnQoaSkKICBwcmludCgiUm93IGk6ICIpCiAgIyAyLjIuIGZvciB0aGUgbnVtYmVyIG9mIGNvbHVtbnMKICBmb3IgKGogaW4gMTpuY29sKG0pKSB7CiAgICAjMi4gMyBzZXQgZWFjaCBjZWxsIHZhbHVlID0gcm93IG51bWJlciAqIGNvbHVtbiBudW1iZXIKICAgIG1baSwgal0gPC0gaSAqIGoKICB9Cn0KCm0KYGBgCgppID0gaXRlcmF0b3IKCgoK</div>
 
 
 
