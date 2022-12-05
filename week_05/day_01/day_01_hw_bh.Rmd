@@ -1,0 +1,91 @@
+---
+title: "Week 5 Day 01 HW"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(CodeClanData)
+revenue_breakdown <- qb_revenue_breakdown
+monthly_sales <- qb_monthly_sales
+competitors <- qb_competitors
+device_data <- qb_device_data
+
+```
+
+
+1.
+```{r}
+ggplot(revenue_breakdown) +
+  aes(x = Product, y = Revenue, fill = Year) +
+  geom_bar(stat = "identity")
+```
+
+2. 
+```{r}
+monthly_sales_kwik_bit <- monthly_sales %>% 
+  filter(Cashflow == "Kwikbit Unit 1 Sales")
+ 
+
+ggplot(monthly_sales_kwik_bit) +
+  aes(Date, Amount) +
+  geom_point()
+  
+  
+```
+
+3.
+```{r}
+monthly_sales_x <- monthly_sales %>% 
+  filter(Cashflow == "Total Revenue" | Cashflow == "Cost")
+
+
+ggplot(monthly_sales_x) +
+  aes(x = Date, y = Amount, colour = Cashflow) +
+  geom_line()
+```
+
+4.
+```{r}
+qb_competitors
+
+ggplot(competitors) +
+  aes(x = Year, y = (Revenue), fill = Company) +
+  geom_area() +
+  scale_y_continuous(labels = scales::comma)
+```
+
+5. 
+```{r}
+ggplot(competitors) +
+  aes(x = Year, y = Revenue, colour = Company) +
+  geom_line() +
+  scale_y_continuous(labels = scales::comma) +
+  geom_point()
+```
+
+6.
+```{r}
+device_data
+
+ggplot(device_data) +
+  aes(x = hours, y = counts) +
+  geom_line(stat = "identity")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
