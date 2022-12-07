@@ -4,6 +4,7 @@ output: html_notebook
 ---
 
 ```{r}
+library(ggplot2)
 library(tidyverse)
 library(CodeClanData)
 revenue_breakdown <- qb_revenue_breakdown
@@ -29,7 +30,7 @@ monthly_sales_kwik_bit <- monthly_sales %>%
 
 ggplot(monthly_sales_kwik_bit) +
   aes(Date, Amount) +
-  geom_point()
+  geom_line()
   
   
 ```
@@ -66,11 +67,13 @@ ggplot(competitors) +
 
 6.
 ```{r}
-device_data
+device_data <- device_data %>% 
+  mutate(decimal_hour = hours + (mins/60))
 
 ggplot(device_data) +
-  aes(x = hours, y = counts) +
-  geom_line(stat = "identity")
+  aes(x = decimal_hour, y = counts) +
+  geom_line(stat = "identity") +
+  facet_grid(id ~ device)
 ```
 
 
