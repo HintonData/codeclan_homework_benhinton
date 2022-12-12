@@ -1,0 +1,56 @@
+---
+title: "Game Sales Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+game_sales <- CodeClanData::game_sales
+```
+
+
+```{r}
+game_sales %>% 
+  ggplot() +
+  aes(x = genre, y = sales) +
+  geom_bar(stat = "identity", fill = "blue")
+  
+```
+
+```{r}
+view(game_sales)
+```
+
+
+
+Note: sales is in millions
+
+### Idea 1:
+Select publisher and platform as a dropdown.
+
+sales on the y-axis
+genre on the x-axis
+
+We will start with publisher, as it's more interesting. A category for "All" also needs to be included as a comparison.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

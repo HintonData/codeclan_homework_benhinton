@@ -5,6 +5,7 @@ library(tidyverse)
 hair_eye_colour <- as_tibble(HairEyeColor)
 
 ui <- fluidPage(
+  theme_bootswatch("quartz"),
   titlePanel(tags$h1("Hair and Eye Colour")),
   
   sidebarLayout(
