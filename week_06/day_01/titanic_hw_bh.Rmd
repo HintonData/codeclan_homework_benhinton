@@ -1,0 +1,108 @@
+---
+title: "Titanic Homework"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(gtools)
+source("prob.R")
+titanic <- read_csv("data/titanic.csv")
+```
+
+Titanic:
+
+```{r}
+titanic %>% 
+  select(class) %>% 
+  unique()
+
+titanic <- titanic %>% 
+  mutate(passenger = class == "3rd" | class == "2nd" | class == "1st") %>% 
+  mutate(crew = class != "3rd" & class != "2nd" & class != "1st")
+```
+
+What proportion of the crew survived? And what proportion of the passengers?
+
+```{r}
+total_survivors <- titanic %>% 
+  filter(survived == "yes") %>% 
+  nrow()
+
+crew_survived_sum <- titanic %>% 
+  filter(crew == TRUE & survived == "yes") %>% 
+  nrow()
+
+passenger_survived_sum <- titanic %>% 
+  filter(crew == FALSE & survived == "yes") %>% 
+  nrow()
+
+prop_survived_crew <- crew_survived_sum / total_survivors
+
+prop_survived_passenger <- passenger_survived_sum / total_survivors
+
+
+
+prop_survived_crew
+prop_survived_passenger
+
+```
+
+So; 
+prob(survived | crew) = 0.3
+prob(survived | passenger) = 0.7
+
+Therefore, passengers were more likely to survive than crew.
+
+
+
+Probability Consolidation Questions:
+
+1.
+```{r}
+s_all_possibilities <- rolldie(1) %>% 
+  summarise(all_possibilities = n())
+
+s_less_5 <- rolldie(1) %>% 
+  filter(X1 < 5) %>% 
+  summarise(n())
+
+prob_q1 <- s_less_5 / s_all_possibilities
+prob_q1
+```
+
+2.
+There are 3 events. 
+
+```{r}
+rolldie(3) %>% 
+  summarise(n())
+
+# and 216 possible outcomes
+```
+
+6.
+P(A | B) = P(A AND B) / P(B)
+P(spades | black) = P(spades) AND P(black) / P(black)
+
+So, 26 of the cards are black. 13 are black and spades. So 13 is the intersect. According to the formula, this means 13/26 is the probability, or 0.5. 
+
+This makes sense, as there is an equal chance of picking up a spade and a club.
+```{r}
+deck <- cards(jokers = FALSE) %>% 
+  mutate(black_card = suit == "Club" | suit == "Spade")
+
+
+
+```
+
+4.
+```{r}
+heights <- c(100, 200, 300, 400, 500)
+
+x <- as_tibble(permutations(n = 5, r = 5, v = heights))
+
+1 / nrow(x)
+```
+
+5. 
