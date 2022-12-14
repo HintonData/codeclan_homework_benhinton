@@ -20,7 +20,7 @@ ggplot(phones) +
   aes(x = )
 ```
 
-
+2.
 ```{r}
 phones %>% 
   group_by(brand) %>% 
@@ -41,7 +41,7 @@ rating_phones <- phones %>%
     sd = sd(rating)
   )
   
-phones %>% 
+stats <- phones %>% 
   filter(brand == "Samsung") %>% 
   ggplot(aes(x = rating)) +
   geom_histogram(aes(y = ..density..),
@@ -55,23 +55,28 @@ phones %>%
     ),
     col = "red"
   )
+
+samsung_ratings <- phones %>%
+  filter(brand == "Samsung") %>%
+  select(rating)
+
 ```
 
 ```{r}
-phones %>%
+samsung_ratings %>%
   filter(rating >= rating_phones$mean - rating_phones$sd) %>%
   filter(rating <= rating_phones$mean + rating_phones$sd) %>%
-  summarise(prop_within_1sd = n() / nrow(phones))
+  summarise(prop_within_1sd = n() / nrow(samsung_ratings))
 
-phones %>%
+samsung_ratings %>%
   filter(rating >= rating_phones$mean - (rating_phones$sd * 2)) %>%
   filter(rating <= rating_phones$mean + (rating_phones$sd * 2)) %>%
-  summarise(prop_within_2sd = n() / nrow(phones))
+  summarise(prop_within_2sd = n() / nrow(samsung_ratings))
 
-phones %>%
+samsung_ratings %>%
   filter(rating >= rating_phones$mean - (rating_phones$sd * 3)) %>%
   filter(rating <= rating_phones$mean + (rating_phones$sd * 3)) %>%
-  summarise(prop_within_3sd = n() / nrow(phones))
+  summarise(prop_within_3sd = n() / nrow(samsung_ratings))
 ```
 
 Fairly close to what you'd expect from a normal distribtion, particulary as you get further away from the mean.
