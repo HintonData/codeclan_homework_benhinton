@@ -22,7 +22,7 @@ HA; mean(sleep_total) - 7 != 0
 
 Calculate test statistic
 ```{r}
-mean(msleep$sleep_total)
+mean_diff_sleep <- mean(msleep$sleep_total) - 7
 ```
 
 Mean is much higher than 7. HA is likely true
@@ -30,15 +30,18 @@ Mean is much higher than 7. HA is likely true
 ```{r}
 null_distribution <- msleep %>% 
   specify(response = sleep_total) %>%    # response = what we care about (average rating)
-  hypothesise(null = "point", mu = 7) %>%  # this time we also hypothesise
+  hypothesise(null = "point", mu = mean_diff_sleep) %>%  # this time we also hypothesise
   generate(reps = 2000, type = "bootstrap") %>%   # type will change for different tests
   calculate(stat = "mean")
 ```
 
 ```{r}
-null_distribution %>% 
-  visualise(bins = 25)
+null_distribution_q3 %>% 
+  visualise(bins = 25) +
+  shade_p_value(obs_stat = mean_diff_sleep,
+                direction = "both")
 ```
+
 It doesn't even show up! It's totally off
 
 ```{r}
@@ -77,30 +80,31 @@ avg_herbi = 9.5
 HO: avg_omni - 9.5 = 0
 HA: avg_omni - 9.5 > 0
 
+
+
 ```{r}
+mean_diff <- avg_omni$mean - avg_herbi$mean
+
 null_distribution_q3 <- msleep %>% 
   specify(response = sleep_total) %>%    # response = what we care about (average rating)
-  hypothesise(null = "point", mu = 9.5) %>%  # this time we also hypothesise
-  generate(reps = 2000, type = "bootstrap") %>%   # type will change for different tests
+  hypothesise(null = "point", mu = mean_diff) %>%  # this time we also hypothesise
+  generate(reps = 10000, type = "bootstrap") %>%   # type will change for different tests
   calculate(stat = "mean")
 ```
 
 ```{r}
 null_distribution_q3 %>% 
-  visualise(bins = 25)
-
-null_distribution_q3 %>% 
   visualise(bins = 25) +
-  shade_p_value(obs_stat = avg_herbi$mean,
+  shade_p_value(obs_stat = mean_diff,
                 direction = "greater") # direction depends on your hypothosese 
 
 null_distribution_q3 %>% 
   get_p_value(
-    obs_stat = 9.5,
+    obs_stat = mean_diff,
     direction = "less")
 ```
 
-p > alpha, therefore we may not reject the null hypothesis.
+p > alpha, therefore we can NOT reject the null hypothesis.
 
 
 4. Perform an appropriate statistical test to determine whether the proportion of domesticated animal types in the population of animal types is greater than 5%
