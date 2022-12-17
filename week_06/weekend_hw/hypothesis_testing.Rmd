@@ -1,0 +1,252 @@
+---
+title: "Hypothesis Testing"
+output: html_notebook
+---
+
+1.1 Hypothesis testing - practical
+
+1.
+```{r}
+library(tidyverse)
+library(infer)
+data(msleep)
+```
+
+
+2.
+Is the mean(sleep_total) the same as the jaberwockies sleep total (7 hours)?
+
+alpha; 0.05
+HO; mean(sleep_total) - 7 = 0
+HA; mean(sleep_total) - 7 != 0
+
+Calculate test statistic
+```{r}
+mean(msleep$sleep_total)
+```
+
+Mean is much higher than 7. HA is likely true
+
+```{r}
+null_distribution <- msleep %>% 
+  specify(response = sleep_total) %>%    # response = what we care about (average rating)
+  hypothesise(null = "point", mu = 7) %>%  # this time we also hypothesise
+  generate(reps = 2000, type = "bootstrap") %>%   # type will change for different tests
+  calculate(stat = "mean")
+```
+
+```{r}
+null_distribution %>% 
+  visualise(bins = 25)
+```
+It doesn't even show up! It's totally off
+
+```{r}
+null_distribution %>% 
+  get_p_value(
+    obs_stat = mean(msleep$sleep_total),
+    direction = "both")
+```
+
+p is <0.001! Meaning we can reject the null hypothesis
+
+
+3.
+Perform an appropriate statistical test to determine whether omnivores sleep for significantly longer than herbivores, on average.
+
+Average means we're working with mean.
+
+Basically, group by diet type then mean(sleep_total)
+
+
+Start with herbivores
+```{r}
+avg_herbi <- msleep %>% 
+  filter(vore == "herbi") %>% 
+  group_by(vore) %>% 
+  summarise(mean = mean(sleep_total))
+
+avg_omni <- msleep %>% 
+  filter(vore == "omni") %>% 
+  group_by(vore) %>% 
+  summarise(mean = mean(sleep_total))
+```
+
+avg_herbi = 9.5
+
+HO: avg_omni - 9.5 = 0
+HA: avg_omni - 9.5 > 0
+
+```{r}
+null_distribution_q3 <- msleep %>% 
+  specify(response = sleep_total) %>%    # response = what we care about (average rating)
+  hypothesise(null = "point", mu = 9.5) %>%  # this time we also hypothesise
+  generate(reps = 2000, type = "bootstrap") %>%   # type will change for different tests
+  calculate(stat = "mean")
+```
+
+```{r}
+null_distribution_q3 %>% 
+  visualise(bins = 25)
+
+null_distribution_q3 %>% 
+  visualise(bins = 25) +
+  shade_p_value(obs_stat = avg_herbi$mean,
+                direction = "greater") # direction depends on your hypothosese 
+
+null_distribution_q3 %>% 
+  get_p_value(
+    obs_stat = 9.5,
+    direction = "less")
+```
+
+p > alpha, therefore we may not reject the null hypothesis.
+
+
+4. Perform an appropriate statistical test to determine whether the proportion of domesticated animal types in the population of animal types is greater than 5%
+
+one sample prop, therefore:
+```{r}
+# one sample prop
+data %>% 
+  specify(response = "col of interest", success = "success condition") %>% 
+  hypothesise(null = "point", p = x) %>% 
+  generate(reps = yyyy, type = "draw") %>% 
+  calculate(stat = "prop")
+```
+
+
+H0: prop_domesticated animals = 0.05
+HA: prop_domesticated animals > 0.05
+```{r}
+msleep <- msleep %>% 
+  mutate(is_domesticated = conservation == "domesticated")
+```
+
+
+Calculate test statistic
+```{r}
+prop_domesticated <- msleep %>% 
+  filter(is_domesticated == TRUE) %>% 
+  summarise(prop = n() / nrow(msleep))
+```
+
+
+```{r}
+null_distribution_q4 <- msleep %>% 
+  drop_na() %>% 
+  specify(response = is_domesticated, success = 'TRUE') %>% 
+  hypothesise(null = "point", p = 0.05) %>% 
+  generate(reps = 2000, type = "draw") %>% 
+  calculate(stat = 'prop')
+```
+```{r}
+null_distribution_q4 %>% 
+  visualise(bins = 25) +
+  shade_p_value(obs_stat = prop_domesticated,
+                direction = "greater") # direction depends on your hypothosese 
+
+null_distribution_q4 %>% 
+  get_p_value(
+    obs_stat = prop_domesticated,
+    direction = "greater")
+```
+
+p > 0.05, therefore we may not reject the null hypothesis in favour of HA.
+
+
+
+
+1.2 Hypothesis testing - Defining the Hypothesis
+
+For the following three business problems write out:
+
+What kind of test you would use
+H0
+ and Ha
+ in both mathematical notation and in words.
+Also state the method you would use to generate the null distribution (bootstrap, permutation or draw).
+
+
+1.
+Boss thinks that 40% of the town knows about the coffee shop. I think it is higher than 40%
+
+I have one sample of 200 and I am working with proportions, I would perform a draw (one sample proportion) test.
+
+H0: people_knowing_about_coffee_shop = 0.4
+HA; people_knowing_about_coffee_shop > 0.4
+
+
+2.
+"that website users overall are more likely to click on the banner if positioned at the top of the page"
+
+Group A
+ continued to be shown the banner at the right hand side of the webpage (its usual position)
+ 
+  group B
+ was shown the banner at the top of the page
+ 
+ proportion
+ 
+Will the CTR (click through rate) be higher for group B?
+
+H0: CTR_group_A - CTR_group_B >= 0
+HA: CTR_group_A - CTR_group_B < 0
+
+H0: Those in group A (banner at right of page), are more likely to click (have a higher CTR) than those of group B (banner at TOP of page)
+
+HA: Those in group A(banner at right of page), are less likely to click (have a higher CTR) than those of group B (banner at TOP of page)
+
+I would use two-sample independent testing, with permutations.
+
+
+
+3.
+H0: mean_part_width - 145 = 0
+HA: mean_part_width - 145 != 0
+
+H0: the mean_part_width is 145mm
+HA: the mean_part_width is not 145mm
+
+We have one sample only. We are dealing with means rather than proportions. Therefore we will use bootstrapping
+
+
+1.3 Hypothesis Testing - Interpreting the results
+1.
+H0: people_knowing_about_coffee_shop = 0.4
+HA; people_knowing_about_coffee_shop > 0.4
+
+Coffee shop problem. Significance level: 0.05, calculated p
+-value: 0.07
+
+If p > alpha, we can't reject the null hypothesis.
+0.07 > 0.05
+
+We can't reject the null hypothesis.
+
+
+2.
+H0: CTR_group_A - CTR_group_B >= 0
+HA: CTR_group_A - CTR_group_B < 0
+
+Website company problem. Significance level: 0.01, p
+-value: 0.006
+
+If p > alpha, we can't reject the null hypothesis.
+0.01 > 0.006 = FALSE
+We CAN reject the null hypothesis
+
+
+
+
+3.
+H0: mean_part_width - 145 = 0
+HA: mean_part_width - 145 != 0
+
+Manufacturing company problem. Significance level: 0.05, p
+-value: 0.55
+
+If p > alpha, we can't reject the null hypothesis.
+
+0.055 > 0.05
+We may not reject the null hypothesis.
