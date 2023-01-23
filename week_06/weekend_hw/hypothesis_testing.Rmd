@@ -36,7 +36,7 @@ null_distribution <- msleep %>%
 ```
 
 ```{r}
-null_distribution_q3 %>% 
+null_distribution %>% 
   visualise(bins = 25) +
   shade_p_value(obs_stat = mean_diff_sleep,
                 direction = "both")
@@ -112,11 +112,11 @@ p > alpha, therefore we can NOT reject the null hypothesis.
 one sample prop, therefore:
 ```{r}
 # one sample prop
-data %>% 
-  specify(response = "col of interest", success = "success condition") %>% 
-  hypothesise(null = "point", p = x) %>% 
-  generate(reps = yyyy, type = "draw") %>% 
-  calculate(stat = "prop")
+# data %>% 
+#   specify(response = "col of interest", success = "success condition") %>% 
+#   hypothesise(null = "point", p = x) %>% 
+#   generate(reps = yyyy, type = "draw") %>% 
+#   calculate(stat = "prop")
 ```
 
 
