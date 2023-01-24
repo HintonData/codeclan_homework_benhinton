@@ -1,0 +1,69 @@
+---
+title: "Day 1 HW"
+output: html_notebook
+---
+
+Loading data in:
+```{r}
+library(tidyverse)
+library(modelr)
+library(broom)
+project <- read_csv("data/project_management.csv")
+```
+
+
+Plotting data:
+```{r}
+model <- lm(actual_length ~ estimated_length,
+            data = project)
+
+project %>% 
+  ggplot() +
+  aes(x = estimated_length, y = actual_length) +
+  geom_point()
+  #geom_smooth(method = "lm")
+```
+
+
+Calculating correlation coefficient:
+```{r}
+project %>% 
+  summarise(correlation_coefficient = cor(y = actual_length, x = estimated_length))
+```
+
+A correlation coefficient of 0.8 indicates a very strong correlation
+
+
+Performing a simple linear regression:
+```{r}
+model <- lm(actual_length ~ estimated_length,
+            data = project)
+```
+
+
+Interpret the regression coefficient of estimated_length:
+```{r}
+glance(model)
+```
+
+0.65 means 65% of the actual_length can be explained by the estimated_length.
+
+
+Is the relationship statistically significant?
+```{r}
+tidy(project)
+```
+Yes cause of the small p-value
+
+
+EXTENSION:
+```{r}
+aes(label = 1:nrow(project))
+
+project %>% 
+  ggplot() +
+  aes(x = estimated_length, y = actual_length) +
+  geom_text(aes(label = 1:nrow(project)))
+```
+5 looks like an outlier
+
