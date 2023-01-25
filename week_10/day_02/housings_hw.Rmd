@@ -1,0 +1,51 @@
+---
+title: "Housings HW"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(mosaic) # for model plots
+library(janitor)
+library(tidyverse)
+library(GGally) # for pair plot
+library(ggfortify) # for model diagnostics
+housing_prices <- read_csv("data/housing_prices.csv")
+```
+
+1.
+```{r}
+summary(housing_prices)
+head(housing_prices)
+```
+
+2.
+```{r}
+total_rooms_and_bedrooms <- housing_prices %>% 
+  select(total_rooms, total_bedrooms)
+
+ggpairs(total_rooms_and_bedrooms, progress = FALSE)
+```
+
+3.
+```{r}
+housing_trim <- housing_prices %>% 
+  select(-total_bedrooms)
+```
+
+4.i
+```{r}
+ggpairs(housing_trim)
+```
+
+median_house_value and median_income seem to have a strong correlation
+```{r}
+ggplot(housing_trim) +
+  aes(x = median_income, y = median_house_value) +
+  geom_point()
+```
+
+
+
+
+
