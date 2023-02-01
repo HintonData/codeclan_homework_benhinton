@@ -1,0 +1,50 @@
+---
+title: "Homework Quiz W10"
+output: html_notebook
+---
+
+1. I want to predict how well 6 year-olds are going to do in their final school exams. Using the following variables am I likely under-fitting, fitting well or over-fitting? Postcode, gender, reading level, score in maths test, date of birth, family income.
+
+
+Likely overfitting. Postcode, gender and date of birth are unlikely to have a big correlation with high grades (the others may though!)
+
+
+2. If I have two models, one with an AIC score of 34,902 and the other with an AIC score of 33,559 which model should I use?
+
+
+The one with a score of 33,559, as lower AIC scores indicate a better fit.
+
+
+3. I have two models, the first with: r-squared: 0.44, adjusted r-squared: 0.43. The second with: r-squared: 0.47, adjusted r-squared: 0.41. Which one should I use?
+
+
+The 1st, as the adjusted r-squared is higher which is a better measure than regular r-squared.
+
+
+4. I have a model with the following errors: RMSE error on test set: 10.3, RMSE error on training data: 10.4. Do you think this model is over-fitting?
+
+
+No, as there is a small variation between the test set RMSE and the training set RMSE.
+
+
+5. How does k-fold validation work?
+
+We basically split our datasets into k number of folds. Say we have 5. For each of these, you'd use one section of the 5 as the test dataset and then the other 4 as the training. You do this k times, so 5, and then take the average.
+
+
+
+6. What is a validation set? When do you need one?
+
+It's a different partition to training or test data used to optimise a model, finetuning it. Works like test data.
+
+
+7. Describe how backwards selection works.
+
+You fit all possible parameters to your model then work back until you find the best one, that is well fitted. Each time a parameter is removed it's gone from the model and won't be used again.
+
+
+
+8. Describe how best subset selection works.
+
+Essentially we test every possible combination of variables. So, we use a lot more computing power but don't have the issue that backwards or forwards selection has that once a variable is gone or added, it's stuck there in the model.
+

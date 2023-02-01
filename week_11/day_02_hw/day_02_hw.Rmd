@@ -1,0 +1,167 @@
+---
+title: "Day 2 HW"
+output: html_notebook
+---
+
+```{r}
+library(rpart)
+library(rpart.plot)
+library(tidyverse)
+library(modelr)
+library(pROC)
+library(janitor)
+
+library(tidyverse)
+titanic_set <- read_csv('data/titanic_decision_tree_data.csv')
+
+shuffle_index <- sample(1:nrow(titanic_set))
+
+# shuffle the data so class order isn't in order - need this for training/testing split later on 
+titanic_set <- titanic_set[shuffle_index, ]
+```
+Data Dictionary
+
+sex: Biological Sex, male or female
+age_status: adult or child (child defined as under 16)
+class : Ticket class, 1 = 1st (Upper class), 2 = 2nd (Middle Class), 3 = 3rd (Lower Class)
+port_embarkation: C = Cherbourg, Q = Queenstown, S = Southampton
+sibsp : number of siblings / spouses aboard the Titanic
+parch: number of parents / children aboard the Titanic. Some children travelled only with a nanny, therefore parch=0 for them.
+survived_flag : did they survive, 0 = No, 1 = Yes
+
+
+```{r}
+titanic_clean <- titanic_set %>%
+  filter(survived %in% c(0,1)) %>%
+# Convert to factor level
+    mutate(sex = as.factor(sex), 
+           age_status = as.factor(if_else(age <= 16, "child", "adult")),
+         class = factor(pclass, levels = c(3,2,1), labels = c("Lower", "Middle", "Upper")), 
+           survived_flag = factor(survived, levels = c(0,1), labels = c("No", "Yes")), 
+           port_embarkation = as.factor(embarked)) %>%
+  select(sex, age_status, class, port_embarkation, sib_sp, parch, survived_flag) %>%
+  na.omit()
+```
+
+2.
+
+```{r}
+titanic_pred_model <- glm(survived_flag ~ class + sex + age_status, data = titanic_clean,
+                            family = binomial(link = "logit"))
+
+titanic_clean_with_pred <- titanic_clean %>% 
+  add_predictions(titanic_pred_model, type = "response")
+
+roc_obj_pred <- titanic_clean_with_pred %>% 
+  roc(response = survived_flag, predictor = pred)
+
+roc_curve <- ggroc(data = roc_obj_pred, legacy.axes = TRUE) +
+  coord_fixed() +
+  labs(y = "Sensitivity (TPR)",
+       x = "1 - Specificity (FPR)")
+
+roc_curve
+```
+
+There's a point around 0.3 where we start to get more and more FPs.
+
+I think class and sex will have the biggest impacts on our model
+
+
+3.
+```{r}
+# get how many rows we have in total to work out the percentage
+n_data <- nrow(titanic_clean)
+
+# create a test sample index
+test_index <- sample(1:n_data, size = n_data * 0.2)
+
+# create a test set
+titanic_test <- slice(titanic_clean, test_index)
+
+
+# create a training set
+titanic_train <- slice(titanic_clean, -test_index)
+```
+
+I chose an 80/20 split as I felt this was a good ratio and it is fairly standard.
+
+```{r}
+titanic_test %>% 
+  tabyl(survived_flag)
+
+
+titanic_train %>% 
+  tabyl(survived_flag)
+```
+
+Our test and training sets have very similar proportions, this is good!
+
+
+4.
+```{r}
+# Plotting with probabilities
+titanic_fit <- rpart(
+  formula = survived_flag ~ .,
+  data = titanic_train,
+  method = 'class'
+)
+
+rpart.plot(titanic_fit,
+           yesno = 2, # 0: don't write yes/no, 1: write y/n at the top, 2: write y/n at all splits
+           fallen.leaves = TRUE,
+           faclen = 6,
+           digits = 2,
+           split.border.col = 1)
+```
+Top node: only 40% of people survived, in general you'd be likely to die. If your sex was male, you'd have a 19.6% chance of surviving).
+
+
+
+
+
+
+
+
+```{r}
+# plotting with counts
+rpart.plot(titanic_fit,
+           yesno = 2,
+           fallen.leaves = TRUE,
+           faclen = 6,
+           digits = 4,
+           type = 4, # label all nodes, not just leaves
+           extra = 101 # displays the number and % of ob
+           )
+```
+
+
+```{r}
+# rules used to make our tree
+rpart.rules(titanic_fit, cover = TRUE)
+
+```
+
+
+# Using our trained model to create predictions on our test
+```{r}
+## add the predictions
+titanic_test_pred <- titanic_test %>% 
+  add_predictions(titanic_fit, type = "class")
+
+
+# let's look at our prediction, using the most informative variables:
+titanic_test_pred %>% 
+  select(sex, class, age_status)
+```
+
+```{r}
+library(yardstick)
+
+conf_mat <- titanic_test_pred %>% 
+  conf_mat(truth =  survived_flag, estimate = pred)
+
+conf_mat
+```
+
+

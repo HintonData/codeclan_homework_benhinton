@@ -1,0 +1,61 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+houses <- read.csv("data/kc_house_data.csv")
+
+p <- rnorm(10000)
+
+hist(p)
+
+s <- sample(p, 30)
+
+hist(s)
+```
+
+No assumption that the data is normal?
+The residuals should be normal
+Some of the assumptions of linear regression are more robust to violations than others
+
+Why then transform?
+
+The most important reason is to make our model meet the assumptions
+
+```{r}
+hist(log(houses$price))
+
+plot(log(price) ~ sqrt(sqft_living), houses)
+plot(log(price) ~ log(sqft_living), houses)
+
+par(mfrow = c(2,2))
+model <- lm(log2(price) ~ sqft_living, houses[sample(1:nrow(houses), 100), ])
+model2 <- lm(log2(price) ~ log(sqft_living) + lat, houses)
+
+plot(model, lwd = 4)
+plot(model2, lwd = 4)
+
+```
+
+
+Quick notes on the log transformation
+
+
+The mean of the raw data __IS NOT EQUAL__ to the mean of back-transformed data
+
+
+What's the craic with transformations?
+
+1. Don't fret about them
+2. Only usually need to do to meet assumptions
+3. __However__ in meeting the assumptions there may be a trade-off involved
+    - especially in terms of interpretation
+4. You don't need to know how the transform works
+    - you just need a way of "link" the transformed units into a reasonable unit
+
+
+
+
+

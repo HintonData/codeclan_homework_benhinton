@@ -1,0 +1,149 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(caret)
+library(leaps)
+library(relaimpo)
+#library(rJava)
+#library glmulti
+library(tidyverse)
+library(modelr)
+library(ggfortify)
+library(ggplot2)
+```
+
+## Learning objectives
+
+- Know what **overfitting** is
+    - when we end up with a model so specific to the data it doesn't generalise
+- Understand how to use **AIC** scores, **BIC** scores and **adjusted R2**
+    - Goodness of Fit metrics
+- Know how to **evaluate** model performance using 
+    - a test/train split
+    -K-fold cross validation
+- Awareness of **validation** datasets
+
+```{r}
+savings <- CodeClanData::savings
+
+view(savings)
+```
+
+"All models are wrong, but some are useful." - George Box
+
+
+"Models should be as simple as possible but no simpler." - Einstein
+
+
+Another word for making a model simple is _bias_
+The opposite effect - inserting too many variables - is called _variance_
+
+This leads us to the `bias-variance tradeoff` 
+
+
+Fit the data but not the noise.
+
+The more we "fit the data" the more bias we have
+the more we "fit the noise" the more variance we have
+
+```{r}
+lm_overfit <- lm(savings ~ ., data = savings)
+lm_wellfit <- lm(savings ~ salary + age + retired, data = savings)
+lm_underfit <- lm(savings ~ salary, data = savings)
+
+```
+
+```{r}
+par(mfrow = c(2,2))
+
+plot(lm_wellfit)
+```
+
+```{r}
+summary(lm_underfit$r.squared) ## high bias
+summary(lm_wellfit$r.squared)
+summary(lm_overfit$r.squared) ## rherefore high variance
+```
+
+Percentage of variance explained.
+
+## Goodness of fit metric
+
+
+Higher is better
+- closer to 1
+- how high is good?
+    - 0.8 for medicine
+    - 0.3-0.4 for ecology 
+    
+Is the best performing model the one with the highest r^2? 
+
+```{r}
+savings
+```
+
+## Theory (common sense) dictates ...
+
+What to put in the model
+
+
+Parsimony 
+
+Occam's Razor
+
+The simplest solution is usually the best one
+__THERE IS NO TRUE MODEL__
+Simple as possible but not too simple
+
+
+__r^2__
+    - higher is better
+__Adjusted r^2__
+    - higher is better
+    - but is penalised
+
+__AIC__
+    - Akaike
+    
+
+__BIC__
+    - Bayesian
+    
+```{r}
+summary(lm_wellfit)
+```
+
+The r^2 will increase __every__ single time you add a new variable.
+Even if it is random BS
+
+```{r}
+lm()
+```
+
+(r^2 adjusted or otherwise doesn't do what we think it does)
+
+
+Is r^2 really a GoF metric?
+Is AIC / BIC really a GoF metric?
+Lower is better
+
+Lower means lower, not closer to 0.
+
+There is a GoF component and a penalization component.
+
+__However__ both AIC and BIC are __relative__ measures
+```{r}
+AIC(lm_wellfit)
+AIC(lm_underfit)
+AIC(lm_overfit)
+```
+
+```{r}
+BIC(lm_wellfit)
+BIC(lm_underfit)
+BIC(lm_overfit)
+```
+Principle of parsimony

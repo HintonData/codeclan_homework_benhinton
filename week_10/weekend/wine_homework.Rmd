@@ -1,0 +1,16 @@
+---
+title: "Wine Homework"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+wine_quality_red <- read.csv("data/wine_quality_red.csv")
+wine_quality_white <- read.csv("data/wine_quality_white.csv")
+library(leaps)
+```
+
+```{r}
+model <- lm(formula = wine_quality_red)
+```
+

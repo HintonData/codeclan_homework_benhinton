@@ -1,0 +1,131 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(modelr)
+library(tidyverse)
+```
+
+
+## Test and train sets
+
+one dataset
+
+Let's say we have 1,000,000 
+
+Split the data into 2 separate data sets
+
+Training set
+Test set
+
+What are each of these for
+How much data should we apportion to each
+    - We want to use as much as possible for the training
+        - 70 / 30
+        - 80 / 20
+    - use the rest for testing (or validation)
+    - if we model performs well on the test set
+        - we expect it to also perform well on the train set
+    - if it performs poorly
+        - model is overfit
+        - or underfit
+      - how do we combat overfitting
+          - theory
+              - sometimes this is easy - salary probably affects savings
+              - sometimes less clear. location affects savings???
+              
+(Not using r^2 for comparing models - `anova()`)
+
+lm1 has 4 preds
+lm2 has 5 preds
+
+```{r}
+anova(lm_underfit, lm_wellfit)
+```
+
+```{r}
+set.seed(9) # there is no appropriate number for modelling
+n_data <- nrow(savings)
+
+test_index <- sample(1:n_data)
+
+test <- slice(savings, test_index)
+train <- slice(savings, -test_index)
+
+```
+
+```{r}
+# here we train the model
+lm1 <- lm(savings ~ salary + age + retired, savings) #using the train set only
+
+
+#here we create predictions for the test set
+pred_test <- test %>% 
+  add_predictions(lm1) %>% 
+  dplyr::select(savings, pred)
+```
+
+```{r}
+mse_test <- ((pred_test$pred - test$savings)^2)
+```
+
+```{r}
+
+mse_train <- mean((pred_train$pred - train$savings)^2)
+```
+
+```{r}
+pred_train <- train %>% 
+  add_predictions(lm1) %>% 
+  select(savings, pred)
+```
+
+## Pipeline of our workflow
+
+split data
+    test / train
+    80 / 20
+fit the model 
+    on the train data
+assess the model 
+    on the test data
+    
+    
+    
+## K-fold cross validation
+K = 5 ~ five partitions
+K = 10 ~ ten partitions
+
+```{r}
+library(caret) # parsnip
+
+cv_10_fold <- trainControl(method = 'cv',
+                           number = 10,
+                           savePredictions = TRUE)
+
+model <- train(savings ~ salary + age + retired,
+               data = savings,
+               trControl = cv_10_fold,
+               method = "lm")
+
+
+```
+
+```{r}
+model$pred
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
