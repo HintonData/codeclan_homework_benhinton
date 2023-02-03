@@ -1,0 +1,90 @@
+---
+title: "Day 03 HW"
+output: html_notebook
+---
+
+```{r}
+library(broom)
+library(GGally)
+library(tidyverse)
+library(janitor)
+library(factoextra)
+mall_customers <- read.csv("data/mall_customers.csv")%>% 
+  clean_names()
+```
+
+
+```{r}
+# mall_customers %>% 
+#   group_by(gender) %>% 
+#   summarise(gender_count = sum(gender) / n())
+```
+
+
+1.
+```{r}
+# mall_customers %>% 
+#   mutate(spending_rate = spending_score_1_100 / n())
+
+mall_customers %>% 
+  group_by(gender) %>% 
+  ggplot(aes(y = annual_income_k, x = spending_score_1_100, colour = gender)) +
+  geom_point()
+
+mall_customers %>% 
+  ggplot(aes(x = gender, y = spending_score_1_100)) +
+  geom_bar(stat = "identity")
+
+
+```
+
+Women spend more than men, spending score doesn't seem correlated with annual_income_k which is surprising. Age also seems unrelated to annual income unexpectedly.
+
+2.
+```{r}
+# first we scale the data
+mall_customers_scale <- mall_customers %>% 
+  mutate(across(c(annual_income_k, spending_score_1_100), scale))
+
+# then let's find a good value for k
+fviz_nbclust(mall_customers_scale %>% select(annual_income_k, spending_score_1_100),
+             FUNcluster = kmeans,
+             method = "wss",
+             nstart = 20)
+
+fviz_nbclust(mall_customers_scale %>% select(annual_income_k, spending_score_1_100),
+             FUNcluster = kmeans,
+             method = "silhouette",
+             nstart = 20)
+
+fviz_nbclust(mall_customers_scale %>% select(annual_income_k, spending_score_1_100),
+             FUNcluster = kmeans,
+             method = "gap_stat",
+             nstart = 20)
+
+# we will choose 4 as either 4 or 5 or 1 are suggested by these plots
+
+```
+
+
+```{r}
+# now we set up kmeans and plug it into augment() to visualise our clusters
+set.seed(123)
+
+kmeans_mall <- kmeans(
+  mall_customers_scale %>% select(annual_income_k, spending_score_1_100), 
+  centers = 4, 
+  nstart = 20)
+
+augment(kmeans_mall, mall_customers) %>% 
+  ggplot(aes(spending_score_1_100, annual_income_k, colour = .cluster)) +
+  geom_point()
+```
+
+The clustering looks ok to me.
+
+The light blue cluster (#3) is high spenders with low income.
+the red group is low spenders and low income
+the green group is high income and low spend
+the purple group is high income and high spend
+
