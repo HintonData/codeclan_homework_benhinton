@@ -1,0 +1,109 @@
+---
+title: "Text Mining Homework"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(janeaustenr)
+library(tidytext)
+```
+
+Pride and Prejudice:
+```{r}
+  pride_book <- tibble(
+  id = seq_along(prideprejudice),
+  text = prideprejudice
+) %>% 
+  unnest_tokens(word, text)
+```
+
+```{r}
+# most common with stop words
+pride_book %>% 
+  count(word, sort = TRUE)
+
+# most common without stop words
+pride_book %>% 
+  anti_join(filter(stop_words, lexicon == "snowball")) %>% 
+  count(word, sort = TRUE)
+```
+
+
+
+
+
+
+
+
+Sense and Sensibility
+```{r}
+sensesensibility <- tibble(
+  id = seq_along(sensesensibility),
+  text = sensesensibility
+) %>% 
+  unnest_tokens(word, text)
+```
+```{r}
+# most common with stop words
+sensesensibility %>% 
+  count(word, sort = TRUE)
+
+# most common without stop words
+sensesensibility %>% 
+  anti_join(filter(stop_words, lexicon == "snowball")) %>% 
+  count(word, sort = TRUE)
+```
+
+
+
+
+Sentiment Analysis:
+
+Setup:
+```{r}
+titles <- c("Pride and Prejudice", "Sense and Sensibility")
+
+books <- list(prideprejudice, sensesensibility)
+
+books <- purrr::map_chr(books, paste, collapse = ' ')
+str(books)
+
+all_books_df <- tibble(
+  title = titles,
+  text = books
+) %>% 
+  unnest_tokens(word, text)
+
+all_books_tf_idf <- all_books_df %>% 
+  count(word, title) %>% 
+  bind_tf_idf(word, title, n)
+```
+
+```{r}
+all_books_tf_idf %>% 
+  group_by(title) %>% 
+  slice_max(tf_idf, n = 5)
+```
+
+
+
+Both together:
+```{r}
+# most common with stop words
+all_books_df %>% 
+  count(word, sort = TRUE)
+
+# most common without stop words
+all_books_df %>% 
+  anti_join(filter(stop_words, lexicon == "snowball")) %>% 
+  count(word, sort = TRUE)
+```
+
+
+
+
+
+
+
+
