@@ -1,0 +1,117 @@
+---
+title: "Logistic Regression HW"
+output: html_notebook
+---
+
+## Setup
+```{r}
+library(tidyverse)
+library(janitor)
+library(modelr)
+library(GGally)
+library(pROC)
+library(broom)
+library(caret)
+oj <- read_csv("data/orange_juice.csv") %>% 
+  clean_names()
+```
+
+## Wrangling for logistic regression
+```{r}
+oj_clean <- oj %>% 
+  mutate(purchase_ch = ifelse(purchase == "CH", 1, 0)) %>% 
+  select(-purchase, -weekof_purchase) %>% 
+  mutate_if(is.character, as.factor) %>% 
+  mutate(store = as.factor(store))
+```
+
+## Checking for NAs etc
+
+```{r}
+sum(is.na(oj_clean))
+```
+
+## Aliasing
+
+```{r}
+oj_clean <- oj_clean %>% 
+  select(-sale_price_mm, -sale_price_ch, -list_price_diff, -store7, -price_ch, -price_mm, -store_id, -disc_ch, disc_mm, -special_ch, -special_mm)
+```
+
+
+
+## First model build
+
+To start with, I've used all the variables. I figure this is a good way to get going and into the swing of things.
+```{r}
+oj_model <- glm(purchase_ch ~ ., data = oj_clean, family = binomial(link = "logit"))
+
+summary(oj_model)
+alias(oj_model)
+```
+
+AIC is 833.94
+
+
+```{r}
+oj_clean_with_pred <- oj_clean %>% 
+  add_predictions(oj_model, type = "response")
+
+roc_obj_oj <- oj_clean_with_pred %>% 
+  roc(response = purchase_ch, predictor = pred)
+
+ggroc(data = roc_obj_oj, legacy.axes = TRUE) +
+  coord_fixed() +
+  labs(x = '1-Specificity (FPR)', y = 'Sensitivity (TPR)')
+```
+
+
+```{r}
+auc(roc_obj_oj)
+```
+
+
+Ok, this looks pretty good. However, we've included so many variables, and are almost certainly overfitting our model. It would be prudent to find a less overfit model.
+
+Cross-validation:
+```{r}
+ train_control <- trainControl(method = "repeatedcv",
+                               number = 5,
+                               repeats = 100,
+                               savePredictions = TRUE,
+                               classProbs = TRUE,
+                               summaryFunction = twoClassSummary)
+
+oj_cross_val <- oj_clean %>%
+   mutate(purchase_ch = as.factor(purchase_ch))
+
+oj_cross_val$purchase_ch <- factor(oj_cross_val$purchase_ch, levels = unique(oj_cross_val$purchase_ch), labels = make.names(unique(oj_cross_val$purchase_ch)))
+
+model_cross_val <- train(purchase_ch ~ .,
+                data = oj_cross_val,
+                trControl = train_control,
+                method = "glm",
+                family = binomial(link = 'logit'))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
